@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\studyASM\\Q1\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{87DBBAB0-58F2-4B16-88F7-DF08E9C71B10}|Q1.vcxproj|C:\\studyASM\\Q1\\MyFunc.asm||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{87DBBAB0-58F2-4B16-88F7-DF08E9C71B10}|Q1.vcxproj|solutionrelative:MyFunc.asm||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MyFunc.asm",
+              "DocumentMoniker": "C:\\studyASM\\Q1\\MyFunc.asm",
+              "RelativeDocumentMoniker": "MyFunc.asm",
+              "ToolTip": "C:\\studyASM\\Q1\\MyFunc.asm",
+              "RelativeToolTip": "MyFunc.asm",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-05-24T01:41:40.63Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

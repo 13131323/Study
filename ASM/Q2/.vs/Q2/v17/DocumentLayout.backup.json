@@ -1,0 +1,99 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\studyASM\\Q2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0AB81284-F00E-46A9-A990-6FBECBC94451}|Q2.vcxproj|C:\\studyASM\\Q2\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{0AB81284-F00E-46A9-A990-6FBECBC94451}|Q2.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01530317-F5E1-45A1-B774-380746FC1BCB}|..\\StaticLib1\\StaticLib1.vcxproj|C:\\studyASM\\StaticLib1\\MyFunc.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01530317-F5E1-45A1-B774-380746FC1BCB}|..\\StaticLib1\\StaticLib1.vcxproj|C:\\studyASM\\StaticLib1\\MyFunc.asm||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01530317-F5E1-45A1-B774-380746FC1BCB}|..\\StaticLib1\\StaticLib1.vcxproj|C:\\studyASM\\StaticLib1\\pch.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01530317-F5E1-45A1-B774-380746FC1BCB}|..\\StaticLib1\\StaticLib1.vcxproj|C:\\studyASM\\StaticLib1\\StaticLib1.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MyFunc.asm",
+              "DocumentMoniker": "C:\\studyASM\\StaticLib1\\MyFunc.asm",
+              "RelativeDocumentMoniker": "..\\StaticLib1\\MyFunc.asm",
+              "ToolTip": "C:\\studyASM\\StaticLib1\\MyFunc.asm",
+              "RelativeToolTip": "..\\StaticLib1\\MyFunc.asm",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-05-24T02:16:51.93Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MyFunc.h",
+              "DocumentMoniker": "C:\\studyASM\\StaticLib1\\MyFunc.h",
+              "RelativeDocumentMoniker": "..\\StaticLib1\\MyFunc.h",
+              "ToolTip": "C:\\studyASM\\StaticLib1\\MyFunc.h",
+              "RelativeToolTip": "..\\StaticLib1\\MyFunc.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-05-24T02:03:23.437Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\studyASM\\Q2\\main.cpp",
+              "RelativeDocumentMoniker": "main.cpp",
+              "ToolTip": "C:\\studyASM\\Q2\\main.cpp",
+              "RelativeToolTip": "main.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-05-24T01:51:43.155Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "pch.h",
+              "DocumentMoniker": "C:\\studyASM\\StaticLib1\\pch.h",
+              "RelativeDocumentMoniker": "..\\StaticLib1\\pch.h",
+              "ToolTip": "C:\\studyASM\\StaticLib1\\pch.h",
+              "RelativeToolTip": "..\\StaticLib1\\pch.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-05-24T02:04:11.218Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "StaticLib1.cpp",
+              "DocumentMoniker": "C:\\studyASM\\StaticLib1\\StaticLib1.cpp",
+              "RelativeDocumentMoniker": "..\\StaticLib1\\StaticLib1.cpp",
+              "ToolTip": "C:\\studyASM\\StaticLib1\\StaticLib1.cpp",
+              "RelativeToolTip": "..\\StaticLib1\\StaticLib1.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-05-24T01:54:02.848Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

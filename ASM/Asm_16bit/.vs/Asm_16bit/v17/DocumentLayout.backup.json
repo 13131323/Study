@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\studyASM\\Asm_16bit\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F5EE1612-0CDA-4DE6-BEF8-187162E35C24}|Asm_16bit.vcxproj|C:\\studyASM\\Asm_16bit\\P12-02.asm||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{F5EE1612-0CDA-4DE6-BEF8-187162E35C24}|Asm_16bit.vcxproj|solutionrelative:P12-02.asm||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "P12-02.asm",
+              "DocumentMoniker": "C:\\studyASM\\Asm_16bit\\P12-02.asm",
+              "RelativeDocumentMoniker": "P12-02.asm",
+              "ToolTip": "C:\\studyASM\\Asm_16bit\\P12-02.asm",
+              "RelativeToolTip": "P12-02.asm",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-06-05T13:02:46.185Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

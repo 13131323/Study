@@ -1,0 +1,88 @@
+Microsoft (R) Macro Assembler Version 14.43.34809.0	    05/30/25 21:28:46
+Practice 11-						     Page 1 - 1
+
+
+				TITLE Practice 11-3
+				 .model small
+				 .stack 100h
+				 .386
+ = 0014				      bufferSize = 20
+ 0000				 .data
+ 0000  0015 [			      buffer BYTE bufferSize + 1 DUP(0);
+        00
+       ]
+ 0000				 .code
+ 0000				 main PROC
+ 0000  B8 ---- R		      mov ax, @data
+ 0003  8E D8			      mov ds, ax
+ 0005  66| BE 00000000		      mov esi, 0
+ 000B  B6 00			      mov dh, 0
+ 000D  B2 01			      mov dl, 1
+ 000F  B3 71			      mov bl, 71h
+ 0011				 L1:
+ 0011  B4 10			      mov ah, 10h
+ 0013  CD 16			      int 16h
+ 0015  3C 0D			      cmp al, 0dh
+ 0017  74 24			      je L2
+ 0019  67& 88 86 00000000 R	      mov buffer[esi], al
+ 0020  B4 09			      mov ah, 9h
+ 0022  B7 00			      mov bh, 0h
+ 0024  B9 0001			      mov cx, 1h
+ 0027  CD 10			      int 10h
+ 0029  B4 03			      mov ah, 3h
+ 002B  B7 00			      mov bh, 0h
+ 002D  CD 10			      int 10h
+ 002F  B4 02			      mov ah, 2h
+ 0031  B7 00			      mov bh, 0
+ 0033  FE C2			      inc dl
+ 0035  CD 10			      int 10h
+ 0037  66| 46			      inc esi
+ 0039  FE C3			      inc bl
+ 003B  EB D4			      jmp L1
+ 003D				 L2 :
+				      .EXIT
+ 0041				 main ENDP
+				 END main
+Microsoft (R) Macro Assembler Version 14.43.34809.0	    05/30/25 21:28:46
+Practice 11-						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+DGROUP . . . . . . . . . . . . .	GROUP
+_DATA  . . . . . . . . . . . . .	16 Bit	 0015	  Word	  Public  'DATA'	
+STACK  . . . . . . . . . . . . .	16 Bit	 0100	  Para	  Stack	  'STACK'	 
+_TEXT  . . . . . . . . . . . . .	16 Bit	 0041	  Word	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+main . . . . . . . . . . . . . .	P Near	 0000	  _TEXT	Length= 0041 Public
+  L1 . . . . . . . . . . . . . .	L Near	 0011	  _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 003D	  _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 0000h	 
+@DataSize  . . . . . . . . . . .	Number	 0000h	 
+@Interface . . . . . . . . . . .	Number	 0000h	 
+@Model . . . . . . . . . . . . .	Number	 0002h	 
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 DGROUP
+@fardata?  . . . . . . . . . . .	Text   	 FAR_BSS
+@fardata . . . . . . . . . . . .	Text   	 FAR_DATA
+@stack . . . . . . . . . . . . .	Text   	 DGROUP
+bufferSize . . . . . . . . . . .	Number	 0014h	 
+buffer . . . . . . . . . . . . .	Byte	 0000	  _DATA	
+
+	   0 Warnings
+	   0 Errors

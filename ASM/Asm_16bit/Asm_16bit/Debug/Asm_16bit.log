@@ -1,0 +1,3 @@
+﻿  Assembling prac12.asm...
+prac12.asm(9): error A2006: undefined symbol : DGROUP
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\BuildCustomizations\masm.targets(70,5): error MSB3721: The command "ml.exe /c /nologo /Zi /Fo"Asm_16bit\Debug\prac12.obj" /Fl"Asm_16bit.lst" /I "C:\irvine" /W3 /errorReport:prompt  /Taprac12.asm" exited with code 1.
