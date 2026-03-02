@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Pineapple 맛집지도 (Leaflet)</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: sans-serif; }
+        .nav-bar { background: #2c3e50; color: white; padding: 15px; display: flex; gap: 20px; align-items: center; }
+        .logo { font-size: 1.2rem; font-weight: bold; color: #f1c40f; }
+        #map { width: 100vw; height: calc(100vh - 60px); }
+    </style>
+</head>
+<body>
+
+<div class="nav-bar">
+    <div class="logo">🍍 Pineapple</div>
+    <div>맛집지도</div>
+</div>
+
+<div id="map"></div>
+
+<script>
+    // [추가] Leaflet 기본 마커 이미지 경로 강제 지정
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    });
+
+    const map = L.map('map').setView([37.495680, 127.128210], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    let markers = [];
+    map.on('moveend', updateRestaurants);
+    updateRestaurants();
+
+    async function updateRestaurants() {
+        const bounds = map.getBounds();
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+
+        const url = `/api/restaurants/nearby?minLat=${sw.lat}&maxLat=${ne.lat}&minLng=${sw.lng}&maxLng=${ne.lng}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+
+            data.forEach(res => {
+                const marker = L.marker([res.lat, res.lng]).addTo(map)
+                    .bindPopup(`<b>${res.name}</b><br>평점: ⭐ ${res.rating}`);
+                markers.push(marker);
+            });
+        } catch (error) {
+            console.error("데이터 로딩 실패:", error);
+        }
+    }
+</script>
+</body>
+</html>
