@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pick!ture — AI 사진 자동 선별</title>
+  <link rel="stylesheet" href="style.css?v=3" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>pick<span class="accent">!</span>ture</h1>
+    <p class="tagline">AI가 골라주는 SNS 최적의 사진</p>
+  </header>
+
+  <main class="container">
+    <section id="vote-screen" class="card vote-page" hidden>
+      <p class="eyebrow">Collaborative Voting</p>
+      <h2 id="vote-title">사진 투표</h2>
+      <p id="vote-subtitle" class="hint">AI 추천 결과를 참고해 가장 피드에 잘 어울리는 사진을 골라주세요.</p>
+      <div id="vote-candidates" class="vote-grid"></div>
+      <div id="vote-status" class="status" hidden></div>
+    </section>
+
+    <form id="analyze-form">
+      <section class="card">
+        <h2><span class="step">1</span> 기준 피드 등록</h2>
+        <p class="hint">내 기존 게시물 사진 5~10장을 올려 스타일을 학습시켜요.</p>
+        <label class="file-drop" for="reference-input">
+          <span>기준 피드 사진 선택</span>
+          <input id="reference-input" type="file" accept="image/*" multiple hidden />
+        </label>
+        <div id="reference-preview" class="thumb-strip"></div>
+      </section>
+
+      <section class="card">
+        <h2><span class="step">2</span> 후보 사진 업로드</h2>
+        <p class="hint">올릴까 고민 중인 사진을 최대 30장까지 올려요.</p>
+        <label class="file-drop" for="candidate-input">
+          <span>후보 사진 선택</span>
+          <input id="candidate-input" type="file" accept="image/*" multiple hidden />
+        </label>
+        <div id="candidate-preview" class="thumb-strip"></div>
+      </section>
+
+      <section class="card">
+        <h2><span class="step">3</span> 분위기 (선택)</h2>
+        <p class="hint">원하는 톤앤매너를 단어로 적으면 추천에 반영돼요.</p>
+        <input id="mood-input" type="text" class="text-input"
+               placeholder="예: 따뜻하고 차분한 감성, 미니멀" />
+      </section>
+
+      <section class="card">
+        <h2><span class="step">4</span> 분석 설정</h2>
+        <div class="slider-row">
+          <label for="vibe-slider">
+            피드 조화도 가중치
+            <span id="weight-label" class="value">0.80 / 0.20</span>
+          </label>
+          <input id="vibe-slider" type="range" min="0" max="1" step="0.05" value="0.8" />
+          <small>왼쪽: 미학 중시 · 오른쪽: 피드 일관성 중시</small>
+        </div>
+        <div class="slider-row">
+          <label for="threshold-slider">
+            미학 하드 필터 임계값
+            <span id="threshold-label" class="value">3.5</span>
+          </label>
+          <input id="threshold-slider" type="range" min="0" max="10" step="0.5" value="3.5" />
+          <small>이 점수 미만의 사진은 랭킹에서 제외돼요.</small>
+        </div>
+      </section>
+
+      <button id="analyze-btn" type="submit" class="primary-btn">분석하기</button>
+    </form>
+
+    <section id="feature-preview" class="feature-preview">
+      <article class="card feature-card">
+        <p class="eyebrow">2. Feed Optimization Engine</p>
+        <h3>피드 시뮬레이션</h3>
+        <p class="hint">분석이 끝나면 추천/후보 사진을 기존 기준 피드에 추가한 3열 그리드를 바로 확인할 수 있습니다.</p>
+        <span class="feature-state">분석 후 활성화</span>
+      </article>
+      <article class="card feature-card">
+        <p class="eyebrow">3. Collaborative Voting</p>
+        <h3>지인 투표</h3>
+        <p class="hint">추천 결과가 나오면 투표 링크를 생성해 친구가 후보 사진을 보고 선택할 수 있습니다.</p>
+        <span class="feature-state">분석 후 활성화</span>
+      </article>
+    </section>
+
+    <div id="status" class="status" hidden></div>
+
+    <section id="results" hidden>
+      <h2 class="results-title">추천 랭킹</h2>
+      <p id="results-meta" class="hint"></p>
+      <div id="ranked-list" class="result-grid"></div>
+
+      <section id="feed-simulator" class="card utility-panel" hidden>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Feed Optimization Engine</p>
+            <h3>피드 시뮬레이션</h3>
+          </div>
+          <select id="simulation-select" class="select-input" aria-label="피드에 추가할 후보 사진 선택"></select>
+        </div>
+        <p class="hint">선택한 후보 사진을 기존 기준 피드 앞에 배치해 전체 톤앤매너를 3열 그리드로 확인합니다.</p>
+        <div id="simulation-grid" class="feed-grid simulation-grid"></div>
+      </section>
+
+      <section id="vote-tools" class="card utility-panel" hidden>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Collaborative Voting</p>
+            <h3>지인 투표 링크</h3>
+          </div>
+          <button id="create-vote-link" type="button" class="secondary-btn">투표 링크 생성</button>
+        </div>
+        <p class="hint">AI 추천 결과를 친구와 공유하고, 투표 결과를 함께 참고해 최종 사진을 선택하세요.</p>
+        <div id="vote-link-box" class="share-box" hidden>
+          <input id="vote-link-output" class="text-input" readonly />
+          <button id="refresh-vote-results" type="button" class="secondary-btn">결과 새로고침</button>
+        </div>
+        <div id="owner-vote-results" class="vote-results"></div>
+      </section>
+
+      <div id="filtered-block" hidden>
+        <h3 class="filtered-title">하드 필터로 제외된 사진</h3>
+        <div id="filtered-list" class="result-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="preview-modal" class="modal" hidden>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3>피드 미리보기</h3>
+        <button id="modal-close" type="button" class="close-btn">&times;</button>
+      </div>
+      <p class="hint">선택한 사진을 기존 피드 맨 앞에 배치했을 때의 모습이에요.</p>
+      <div id="feed-grid" class="feed-grid"></div>
+    </div>
+  </div>
+
+  <script src="app.js?v=3"></script>
+</body>
+</html>
