@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pick!ture — AI 사진 자동 선별</title>
-  <link rel="stylesheet" href="style.css?v=3" />
+  <title>pick!ture - AI 사진 자동 선별</title>
+  <link rel="stylesheet" href="style.css?v=4" />
 </head>
 <body>
   <header class="app-header">
@@ -24,7 +24,7 @@
     <form id="analyze-form">
       <section class="card">
         <h2><span class="step">1</span> 기준 피드 등록</h2>
-        <p class="hint">내 기존 게시물 사진 5~10장을 올려 스타일을 학습시켜요.</p>
+        <p class="hint">기존 게시물 사진 5~10장을 올려 내 피드 스타일을 학습시켜요.</p>
         <label class="file-drop" for="reference-input">
           <span>기준 피드 사진 선택</span>
           <input id="reference-input" type="file" accept="image/*" multiple hidden />
@@ -45,8 +45,7 @@
       <section class="card">
         <h2><span class="step">3</span> 분위기 (선택)</h2>
         <p class="hint">원하는 톤앤매너를 단어로 적으면 추천에 반영돼요.</p>
-        <input id="mood-input" type="text" class="text-input"
-               placeholder="예: 따뜻하고 차분한 감성, 미니멀" />
+        <input id="mood-input" type="text" class="text-input" placeholder="예: 따뜻하고 차분한 감성, 미니멀" />
       </section>
 
       <section class="card">
@@ -76,7 +75,7 @@
       <article class="card feature-card">
         <p class="eyebrow">2. Feed Optimization Engine</p>
         <h3>피드 시뮬레이션</h3>
-        <p class="hint">분석이 끝나면 추천/후보 사진을 기존 기준 피드에 추가한 3열 그리드를 바로 확인할 수 있습니다.</p>
+        <p class="hint">분석이 끝나면 여러 후보 사진을 기존 기준 피드 앞에 추가한 3열 그리드를 확인할 수 있습니다.</p>
         <span class="feature-state">분석 후 활성화</span>
       </article>
       <article class="card feature-card">
@@ -100,9 +99,10 @@
             <p class="eyebrow">Feed Optimization Engine</p>
             <h3>피드 시뮬레이션</h3>
           </div>
-          <select id="simulation-select" class="select-input" aria-label="피드에 추가할 후보 사진 선택"></select>
+          <span id="simulation-count" class="feature-state">0장 선택</span>
         </div>
-        <p class="hint">선택한 후보 사진을 기존 기준 피드 앞에 배치해 전체 톤앤매너를 3열 그리드로 확인합니다.</p>
+        <p class="hint">업로드 후보를 여러 장 선택하면 기존 기준 피드 앞에 모두 추가된 3열 그리드로 미리봅니다.</p>
+        <div id="simulation-choices" class="simulation-choices" aria-label="피드에 추가할 후보 사진 선택"></div>
         <div id="simulation-grid" class="feed-grid simulation-grid"></div>
       </section>
 
@@ -114,7 +114,7 @@
           </div>
           <button id="create-vote-link" type="button" class="secondary-btn">투표 링크 생성</button>
         </div>
-        <p class="hint">AI 추천 결과를 친구와 공유하고, 투표 결과를 함께 참고해 최종 사진을 선택하세요.</p>
+        <p class="hint">AI 추천 결과를 친구와 공유하고, 투표 수 기준 결과를 함께 참고해 최종 사진을 선택하세요.</p>
         <div id="vote-link-box" class="share-box" hidden>
           <input id="vote-link-output" class="text-input" readonly />
           <button id="refresh-vote-results" type="button" class="secondary-btn">결과 새로고침</button>
@@ -135,11 +135,12 @@
         <h3>피드 미리보기</h3>
         <button id="modal-close" type="button" class="close-btn">&times;</button>
       </div>
-      <p class="hint">선택한 사진을 기존 피드 맨 앞에 배치했을 때의 모습이에요.</p>
+      <p class="hint">선택한 사진을 기존 피드 앞에 배치했을 때의 모습이에요.</p>
       <div id="feed-grid" class="feed-grid"></div>
     </div>
   </div>
 
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
+

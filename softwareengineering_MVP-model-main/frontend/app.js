@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 const DEPLOYED_API_BASE = "https://heon55-pickture.hf.space";
 const LOCAL_HOSTS = new Set(["", "localhost", "127.0.0.1"]);
@@ -15,6 +15,7 @@ const voteCode = new URLSearchParams(window.location.search).get("vote");
 let refPreviewUrls = [];
 let currentCandidates = [];
 let currentVoteCode = "";
+let selectedPreviewPhotoIds = new Set();
 
 function apiUrl(path) {
   return `${API_BASE}${path}`;
@@ -91,13 +92,19 @@ function resultCard(item, opts) {
   return card;
 }
 
-function renderFeedGrid(container, thumbnail) {
+function renderFeedGrid(container, selectedItems) {
   container.innerHTML = "";
-  const picked = document.createElement("img");
-  picked.src = thumbnail;
-  picked.alt = "선택한 후보 사진";
-  picked.className = "picked";
-  container.appendChild(picked);
+  const pickedItems = Array.isArray(selectedItems)
+    ? selectedItems
+    : [{ thumbnail: selectedItems, name: "선택한 후보 사진" }];
+
+  pickedItems.forEach((item, index) => {
+    const img = document.createElement("img");
+    img.src = item.thumbnail;
+    img.alt = item.name || `선택한 후보 사진 ${index + 1}`;
+    img.className = "picked";
+    container.appendChild(img);
+  });
 
   refPreviewUrls.forEach((url, index) => {
     const img = document.createElement("img");
@@ -108,30 +115,52 @@ function renderFeedGrid(container, thumbnail) {
 }
 
 function openFeedPreview(thumbnail) {
-  renderFeedGrid($("feed-grid"), thumbnail);
+  renderFeedGrid($("feed-grid"), [{ thumbnail, name: "선택한 후보 사진" }]);
   $("preview-modal").hidden = false;
 }
 
 function setupFeedSimulator(candidates) {
   const block = $("feed-simulator");
-  const select = $("simulation-select");
+  const choices = $("simulation-choices");
+  const count = $("simulation-count");
   if (!candidates.length) {
     block.hidden = true;
+    selectedPreviewPhotoIds = new Set();
     return;
   }
+
   block.hidden = false;
-  select.innerHTML = "";
-  candidates.forEach((item, index) => {
-    const option = document.createElement("option");
-    option.value = item.id;
-    option.textContent = item.rank ? `${item.rank}위 - ${item.name}` : item.name || `후보 ${index + 1}`;
-    select.appendChild(option);
-  });
+  selectedPreviewPhotoIds = new Set([candidates[0].id]);
+  choices.innerHTML = "";
+
   const renderSelected = () => {
-    const selected = candidates.find((item) => item.id === select.value) || candidates[0];
-    renderFeedGrid($("simulation-grid"), selected.thumbnail);
+    const selected = candidates.filter((item) => selectedPreviewPhotoIds.has(item.id));
+    count.textContent = `${selected.length}장 선택`;
+    renderFeedGrid($("simulation-grid"), selected);
   };
-  select.onchange = renderSelected;
+
+  candidates.forEach((item, index) => {
+    const label = document.createElement("label");
+    label.className = "simulation-choice";
+    label.innerHTML = `
+      <input type="checkbox" value="${item.id}" ${selectedPreviewPhotoIds.has(item.id) ? "checked" : ""} />
+      <img src="${item.thumbnail}" alt="${item.name}" />
+      <span class="simulation-choice-body">
+        <strong>${item.rank ? `${item.rank}위 - ` : ""}${item.name || `후보 ${index + 1}`}</strong>
+        <small>최종 ${Number(item.final || 0).toFixed(1)} · 조화도 ${Number(item.vibe || 0).toFixed(1)}</small>
+      </span>`;
+    const checkbox = label.querySelector("input");
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        selectedPreviewPhotoIds.add(item.id);
+      } else {
+        selectedPreviewPhotoIds.delete(item.id);
+      }
+      renderSelected();
+    });
+    choices.appendChild(label);
+  });
+
   renderSelected();
 }
 
@@ -155,8 +184,7 @@ function renderResults(data) {
   const rankedList = $("ranked-list");
   rankedList.innerHTML = "";
   if (data.ranked.length === 0) {
-    rankedList.innerHTML =
-      `<p class="hint">임계값을 통과한 사진이 없습니다. 임계값을 낮춰 다시 시도해보세요.</p>`;
+    rankedList.innerHTML = `<p class="hint">임계값을 통과한 사진이 없습니다. 임계값을 낮춰 다시 시도해보세요.</p>`;
   } else {
     data.ranked.forEach((item, index) =>
       rankedList.appendChild(resultCard({ ...item, id: `candidate-${index + 1}` }, { dimmed: false })));
@@ -188,13 +216,13 @@ function renderVoteResults(container, payload) {
   }
   const total = payload.totalVotes || 0;
   container.innerHTML = `
-    <div class="vote-summary">총 ${total}표 · 통합 점수는 AI 70% + 투표 30% 기준입니다.</div>
+    <div class="vote-summary">지인 투표 결과 · 총 ${total}표 · 투표 수 기준 순위입니다.</div>
     ${payload.results.map((item, index) => `
       <div class="vote-row">
         <img src="${item.thumbnail}" alt="${item.name}" />
         <div class="vote-row-body">
           <strong>${index + 1}. ${item.name}</strong>
-          <span>${item.voteCount}표 (${item.voteShare}%) · 통합 ${Number(item.combinedScore || 0).toFixed(1)} / 10</span>
+          <span>${item.voteCount}표 (${item.voteShare}%)</span>
           <div class="bar"><span class="s-good" style="width:${Math.min(item.voteShare, 100)}%"></span></div>
         </div>
       </div>`).join("")}`;

@@ -1,4 +1,4 @@
-"""pick!ture MVP — FastAPI 앱: 정적 UI 서빙 + /analyze 분석 파이프라인."""
+﻿"""pick!ture MVP FastAPI app: static UI serving, analysis, and voting APIs."""
 
 import base64
 import io
@@ -42,10 +42,11 @@ class VoteSubmitRequest(BaseModel):
     candidate_id: str
     voter_name: str = ""
 
+
 app = FastAPI(title="pick!ture MVP")
 
-# 프론트엔드를 GitHub Pages 등 다른 도메인에서 서빙할 때 /analyze 호출을
-# 허용하기 위한 CORS 설정. 데모 단계라 모든 출처를 허용한다.
+# Allow the static frontend to call the API from local development, GitHub Pages,
+# or the Hugging Face Space demo during the MVP phase.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -56,7 +57,7 @@ app.add_middleware(
 
 @app.middleware("http")
 async def _no_cache(request, call_next):
-    """MVP 개발 중 정적 파일이 캐시되어 옛 화면이 보이는 문제를 막는다."""
+    """Avoid stale static files while iterating on the MVP UI."""
     response = await call_next(request)
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     return response
@@ -64,16 +65,16 @@ async def _no_cache(request, call_next):
 
 @app.on_event("startup")
 def _warm_model():
-    """첫 요청 지연을 줄이기 위해 서버 기동 시 모델을 미리 로드한다."""
+    """Preload CLIP so the first analysis request feels less abrupt."""
     try:
         clip_engine.get_model()
         print("[pick!ture] CLIP model loaded")
-    except Exception as exc:  # 다운로드 실패 등 — 첫 요청에서 재시도된다
+    except Exception as exc:
         print(f"[pick!ture] model preload warning: {exc}")
 
 
 def _load_image(upload: UploadFile):
-    """업로드 파일을 RGB PIL 이미지로 변환. 실패하면 None."""
+    """Read an uploaded file as an RGB PIL image. Return None on invalid files."""
     try:
         img = Image.open(io.BytesIO(upload.file.read()))
         img.load()
@@ -102,7 +103,9 @@ async def analyze(
     ref_images = [im for im in (_load_image(f) for f in reference) if im is not None]
     if not ref_images:
         return JSONResponse(
-            {"error": "기준 피드 이미지를 1장 이상 업로드하세요."}, status_code=400)
+            {"error": "기준 피드 이미지를 1장 이상 업로드해주세요."},
+            status_code=400,
+        )
 
     cand_pairs = []
     for f in candidates:
@@ -113,7 +116,9 @@ async def analyze(
     cand_pairs = cand_pairs[:MAX_CANDIDATES]
     if not cand_pairs:
         return JSONResponse(
-            {"error": "분석 가능한 후보 이미지가 없습니다."}, status_code=400)
+            {"error": "분석 가능한 후보 이미지가 없습니다."},
+            status_code=400,
+        )
 
     w_vibe = min(max(w_vibe, 0.0), 1.0)
     threshold = min(max(threshold, 0.0), 10.0)
@@ -131,8 +136,7 @@ async def analyze(
         {"name": name, "thumbnail": _thumbnail_data_uri(img)}
         for name, img in cand_pairs
     ]
-    ranked, filtered = scoring.rank_candidates(
-        meta, vibe_raw, aes_raw, w_vibe, threshold)
+    ranked, filtered = scoring.rank_candidates(meta, vibe_raw, aes_raw, w_vibe, threshold)
 
     return JSONResponse({
         "ranked": ranked,
@@ -150,46 +154,50 @@ def _vote_results(link: dict):
     for vote in link["votes"]:
         if vote["candidate_id"] in counts:
             counts[vote["candidate_id"]] += 1
+
     total = sum(counts.values())
     rows = []
-    for candidate in link["candidates"]:
+    for idx, candidate in enumerate(link["candidates"]):
         vote_count = counts[candidate["id"]]
-        ai_score = float(candidate.get("final") or 0)
-        social_score = (vote_count / total * 10.0) if total else 0.0
         rows.append({
             **candidate,
+            "originalOrder": idx,
             "voteCount": vote_count,
             "voteShare": round((vote_count / total * 100.0) if total else 0.0, 1),
-            "combinedScore": round((ai_score * 0.7) + (social_score * 0.3), 2),
         })
-    rows.sort(key=lambda item: (item["combinedScore"], item["voteCount"]), reverse=True)
+
+    # Primary sort: friend votes. Tie-breaker: original AI/result order.
+    rows.sort(key=lambda item: (-item["voteCount"], item["originalOrder"]))
     return {"totalVotes": total, "results": rows}
 
 
 @app.post("/api/votes/links")
 async def create_vote_link(payload: VoteLinkRequest, request: Request):
-    candidates = []
+    vote_candidates = []
     for idx, candidate in enumerate(payload.candidates[:MAX_CANDIDATES]):
         data = candidate.model_dump()
         data["id"] = data.get("id") or f"candidate-{idx + 1}"
-        candidates.append(data)
-    if not candidates:
+        vote_candidates.append(data)
+
+    if not vote_candidates:
         return JSONResponse(
-            {"error": "투표 링크를 만들 후보 사진이 없습니다."}, status_code=400)
+            {"error": "투표 링크를 만들 후보 사진이 없습니다."},
+            status_code=400,
+        )
 
     code = secrets.token_urlsafe(6)
     VOTE_LINKS[code] = {
         "code": code,
         "title": payload.title,
         "mood": payload.mood,
-        "candidates": candidates,
+        "candidates": vote_candidates,
         "votes": [],
     }
     return {
         "shareCode": code,
         "sharePath": f"/?vote={code}",
         "apiBase": str(request.base_url).rstrip("/"),
-        "candidateCount": len(candidates),
+        "candidateCount": len(vote_candidates),
     }
 
 
@@ -212,9 +220,11 @@ async def submit_vote(share_code: str, payload: VoteSubmitRequest):
     link = VOTE_LINKS.get(share_code)
     if link is None:
         return JSONResponse({"error": "투표 링크를 찾을 수 없습니다."}, status_code=404)
+
     valid_ids = {candidate["id"] for candidate in link["candidates"]}
     if payload.candidate_id not in valid_ids:
         return JSONResponse({"error": "선택한 후보를 찾을 수 없습니다."}, status_code=400)
+
     link["votes"].append({
         "candidate_id": payload.candidate_id,
         "voter_name": payload.voter_name.strip()[:40],
@@ -225,8 +235,5 @@ async def submit_vote(share_code: str, payload: VoteSubmitRequest):
     }
 
 
-# 정적 프론트엔드를 루트에 마운트한다(html=True 로 / → index.html).
-# /analyze 같은 명시적 라우트가 우선하므로 충돌하지 않는다.
-# GitHub Pages 배포 시에는 이 마운트가 쓰이지 않지만, HF Space 단독
-# 접속이나 로컬 개발에서는 그대로 UI를 띄워 준다.
+# Mount the static frontend last so explicit API routes above keep priority.
 app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
